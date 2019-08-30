@@ -29,7 +29,7 @@ kubectl label nodes k8s-worker-1 sensor="true"
 The sensor label can be left off and added later, or initially set to false if they may be monitored later.
 
 First the variables in troxileia-configmap.yaml and troxileia-secrets.yaml must be set. Edit those to match your setup. The secret file contains the username and password for the tap. These values must be passed in as base_64.
-Then the configmap must be applied to the cluser:
+Then the configmapand secret  must be applied to the cluser:
 ```
 kubectl apply -f troxileia-configmap.yaml
 kubectl apply -f troxileia-secret.yaml
@@ -38,10 +38,15 @@ To get rid of plain-text username and password stored in secret yaml file:
 ```
 rm troxileia-secret.yaml
 ```
-If using RBAC, give proper permissions:
+If using RBAC, give proper permissions with a ClusterRoleBinding to a ServiceAccount:
 
 ```
-kubectl create clusterrolebinding troxileiaClusterRoleBinding --clusterrole=cluster-admin --serviceaccount=kube-system:default
+#Create ServiceAccount
+kubectl create serviceaccount troxileia -n=kube-system
+#Apply ClusterRole yaml
+kubectl apply -f troxileia_clusterrole.yaml
+#Create ClusterRoleBinding that binds ClusterRole to ServiceAccount
+kubectl create clusterrolebinding troxileia --clusterrole=troxileia --serviceaccount=kube-system:troxileia
 ```
 ### To run locally:
 ```

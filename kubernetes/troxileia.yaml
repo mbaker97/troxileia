@@ -21,3 +21,4 @@ spec:
         image: gcr.io/edcop-dev/troxileia:v1
       restartPolicy: Always
       dnsPolicy: ClusterFirst
+      serviceAccountName: troxileia
