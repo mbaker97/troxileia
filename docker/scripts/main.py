@@ -9,7 +9,7 @@ def get_sensored_ports():
     """
     Returns dictionary of nodes in cluster with corresponding value of sensor
     Runs before Kubernets watch loop
-    :param api: Kubernetes api object
+    :param api: Kubernetes api objectp_vars()
     :returns: list of ports where the nodes are labeled sensor=true
     """
     #Dictionary that stores node name and sensor value
@@ -119,16 +119,23 @@ if __name__=="__main__":
     print("##|    |####|       _/#/   |   \#\     /#|  ||    |####|    __)##|  |/  /_\  \##")
     print("##|    |####|    |   \/    |    \/     \#|  ||    |####|        \|  /    |    \#")
     print("##|____|####|____|_  /\_______  /___/\  \|__||______  /\________/|__\____|__  /#")
-    print("###################\/#########\/######\_/###########\/######################\/##\033[0m")
-
-
+    print("###################\/#########\/######\_/###########\/######################\/##\033[0m\n")
     #Authenticate based on if running in the cluster
     try:
         config.load_incluster_config()
     except:
         config.load_kube_config()
-    tap = tap()
+
+    config = get_configmap_vars()
+    print("\u001b[32m" + '-' * 33 + "Configuration" + '-' * 34)
+    print("Tap type: " + config["tap_type"])
+    print("Tap ip: " + config["ip"])
+    print("Timout seconds: " + config["timeout"])
+    print("App Label(s):" + config["app_label"])
+ 
     port_list = locked_list(get_sensored_ports())
+    print("Initial nodes labeled sensor: " + str(port_list.get_list())+ "\u001b[0m")
+    tap = tap()
     tap.reconfigure(port_list.get_list())
 
     #Start controller threads
