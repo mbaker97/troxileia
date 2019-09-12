@@ -1,0 +1,16 @@
+settings:
+  #These will be put into a configmap
+  #IP address of the network tap
+  ip: IP_HERE
+  #Type of tap. Currently only gigamon is supported
+  tap_type: gigamon
+  #app label of pods to watch
+  #examples: 1 app: app1
+  #          2 apps: app1,app2
+  app_label: bro
+  #Seconds to wait to see if pod is ready
+  timeout: 300
+tap_credentials:
+  #These will be encoded in base_64 and placed in secret
+  username: plain_text_username
+  password: plain_text_password
